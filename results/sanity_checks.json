@@ -1,0 +1,66 @@
+{
+  "n_images": 100,
+  "randomization": [
+    {
+      "randomized_through": "fc",
+      "spearman_mean": -0.031677210195681496,
+      "spearman_std": 0.15814781632521072
+    },
+    {
+      "randomized_through": "layer4",
+      "spearman_mean": -0.006765468222472901,
+      "spearman_std": 0.0792419136604155
+    },
+    {
+      "randomized_through": "layer3",
+      "spearman_mean": 0.035188079551099455,
+      "spearman_std": 0.19418686479126618
+    },
+    {
+      "randomized_through": "layer2",
+      "spearman_mean": -0.01110709409823639,
+      "spearman_std": 0.05148923273640436
+    },
+    {
+      "randomized_through": "layer1",
+      "spearman_mean": 0.0,
+      "spearman_std": 0.0
+    },
+    {
+      "randomized_through": "conv1",
+      "spearman_mean": 0.0,
+      "spearman_std": 0.0
+    }
+  ],
+  "deletion": {
+    "fractions": [
+      0.0,
+      0.05,
+      0.1,
+      0.2,
+      0.3,
+      0.5,
+      0.7
+    ],
+    "gradcam_mean_curve": [
+      0.951088547706604,
+      0.8659298419952393,
+      0.7823368310928345,
+      0.6480082869529724,
+      0.5976353883743286,
+      0.5573225617408752,
+      0.5511978268623352
+    ],
+    "random_mean_curve": [
+      0.951088547706604,
+      0.9192063212394714,
+      0.8954373002052307,
+      0.8544920086860657,
+      0.7611268758773804,
+      0.5935167670249939,
+      0.572210967540741
+    ],
+    "gradcam_auc": 0.4467794001102447,
+    "random_auc": 0.5124380052089691
+  }
+}
