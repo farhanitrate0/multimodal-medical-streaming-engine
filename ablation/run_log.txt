@@ -1,0 +1,87 @@
+﻿Using downloaded and verified file: C:\Users\FARHAN\.medmnist\pneumoniamnist_224.npz
+Using downloaded and verified file: C:\Users\FARHAN\.medmnist\pneumoniamnist_224.npz
+Using downloaded and verified file: C:\Users\FARHAN\.medmnist\pneumoniamnist_224.npz
+
+=== none_partial  ({'sampler': 'none', 'backbone': 'partial'})  trainable params: 16,015,361 ===
+  epoch  1/15 | train 0.4283 | val 0.3166 | val AUROC 0.9863 | 23s  *
+  epoch  2/15 | train 0.2339 | val 0.1557 | val AUROC 0.9913 | 22s  *
+  epoch  3/15 | train 0.1754 | val 0.1256 | val AUROC 0.9940 | 22s  *
+  epoch  4/15 | train 0.1481 | val 0.1079 | val AUROC 0.9951 | 22s  *
+  epoch  5/15 | train 0.1198 | val 0.1004 | val AUROC 0.9966 | 23s  *
+  epoch  6/15 | train 0.1236 | val 0.0812 | val AUROC 0.9976 | 22s  *
+  epoch  7/15 | train 0.1043 | val 0.0805 | val AUROC 0.9975 | 22s  *
+  epoch  8/15 | train 0.0992 | val 0.0759 | val AUROC 0.9972 | 57s  *
+  epoch  9/15 | train 0.0846 | val 0.0763 | val AUROC 0.9980 | 63s
+  epoch 10/15 | train 0.0815 | val 0.0674 | val AUROC 0.9979 | 66s  *
+  epoch 11/15 | train 0.0670 | val 0.0693 | val AUROC 0.9976 | 39s
+  epoch 12/15 | train 0.0663 | val 0.0770 | val AUROC 0.9968 | 22s
+  epoch 13/15 | train 0.0650 | val 0.0670 | val AUROC 0.9979 | 22s  *
+  epoch 14/15 | train 0.0482 | val 0.0603 | val AUROC 0.9983 | 22s  *
+  epoch 15/15 | train 0.0490 | val 0.0717 | val AUROC 0.9984 | 22s
+Using downloaded and verified file: C:\Users\FARHAN\.medmnist\pneumoniamnist_224.npz
+Using downloaded and verified file: C:\Users\FARHAN\.medmnist\pneumoniamnist_224.npz
+Using downloaded and verified file: C:\Users\FARHAN\.medmnist\pneumoniamnist_224.npz
+
+=== balanced_partial  ({'sampler': 'balanced', 'backbone': 'partial'})  trainable params: 16,015,361 ===
+  epoch  1/15 | train 0.3449 | val 0.2059 | val AUROC 0.9829 | 22s  *
+  epoch  2/15 | train 0.1769 | val 0.2001 | val AUROC 0.9895 | 22s  *
+  epoch  3/15 | train 0.1471 | val 0.1266 | val AUROC 0.9923 | 22s  *
+  epoch  4/15 | train 0.1224 | val 0.1187 | val AUROC 0.9939 | 22s  *
+  epoch  5/15 | train 0.1110 | val 0.0980 | val AUROC 0.9947 | 22s  *
+  epoch  6/15 | train 0.0989 | val 0.1107 | val AUROC 0.9955 | 22s
+  epoch  7/15 | train 0.0840 | val 0.0909 | val AUROC 0.9956 | 22s  *
+  epoch  8/15 | train 0.0796 | val 0.0928 | val AUROC 0.9954 | 22s
+  epoch  9/15 | train 0.0699 | val 0.0873 | val AUROC 0.9960 | 22s  *
+  epoch 10/15 | train 0.0534 | val 0.0828 | val AUROC 0.9967 | 22s  *
+  epoch 11/15 | train 0.0550 | val 0.0831 | val AUROC 0.9962 | 22s
+  epoch 12/15 | train 0.0501 | val 0.0910 | val AUROC 0.9958 | 22s
+  epoch 13/15 | train 0.0430 | val 0.0885 | val AUROC 0.9957 | 22s
+  epoch 14/15 | train 0.0375 | val 0.0950 | val AUROC 0.9963 | 22s
+  epoch 15/15 | train 0.0440 | val 0.0858 | val AUROC 0.9959 | 22s
+Using downloaded and verified file: C:\Users\FARHAN\.medmnist\pneumoniamnist_224.npz
+Using downloaded and verified file: C:\Users\FARHAN\.medmnist\pneumoniamnist_224.npz
+Using downloaded and verified file: C:\Users\FARHAN\.medmnist\pneumoniamnist_224.npz
+
+=== none_full  ({'sampler': 'none', 'backbone': 'full'})  trainable params: 24,558,657 ===
+  epoch  1/15 | train 0.4006 | val 0.2605 | val AUROC 0.9913 | 43s  *
+  epoch  2/15 | train 0.2001 | val 0.1318 | val AUROC 0.9942 | 42s  *
+  epoch  3/15 | train 0.1502 | val 0.1043 | val AUROC 0.9958 | 42s  *
+  epoch  4/15 | train 0.1189 | val 0.0875 | val AUROC 0.9966 | 42s  *
+  epoch  5/15 | train 0.0892 | val 0.0910 | val AUROC 0.9986 | 42s
+  epoch  6/15 | train 0.0899 | val 0.0647 | val AUROC 0.9988 | 42s  *
+  epoch  7/15 | train 0.0763 | val 0.0685 | val AUROC 0.9987 | 42s
+  epoch  8/15 | train 0.0676 | val 0.0582 | val AUROC 0.9988 | 42s  *
+  epoch  9/15 | train 0.0571 | val 0.0585 | val AUROC 0.9989 | 42s
+  epoch 10/15 | train 0.0561 | val 0.0514 | val AUROC 0.9993 | 42s  *
+  epoch 11/15 | train 0.0442 | val 0.0528 | val AUROC 0.9989 | 42s
+  epoch 12/15 | train 0.0416 | val 0.0538 | val AUROC 0.9986 | 42s
+  epoch 13/15 | train 0.0436 | val 0.0456 | val AUROC 0.9993 | 42s  *
+  epoch 14/15 | train 0.0286 | val 0.0421 | val AUROC 0.9991 | 42s  *
+  epoch 15/15 | train 0.0311 | val 0.0507 | val AUROC 0.9989 | 42s
+Using downloaded and verified file: C:\Users\FARHAN\.medmnist\pneumoniamnist_224.npz
+Using downloaded and verified file: C:\Users\FARHAN\.medmnist\pneumoniamnist_224.npz
+Using downloaded and verified file: C:\Users\FARHAN\.medmnist\pneumoniamnist_224.npz
+
+=== balanced_full  ({'sampler': 'balanced', 'backbone': 'full'})  trainable params: 24,558,657 ===
+  epoch  1/15 | train 0.3133 | val 0.1751 | val AUROC 0.9858 | 43s  *
+  epoch  2/15 | train 0.1464 | val 0.1492 | val AUROC 0.9943 | 42s  *
+  epoch  3/15 | train 0.1158 | val 0.0912 | val AUROC 0.9959 | 42s  *
+  epoch  4/15 | train 0.0880 | val 0.0829 | val AUROC 0.9970 | 42s  *
+  epoch  5/15 | train 0.0709 | val 0.0776 | val AUROC 0.9966 | 42s  *
+  epoch  6/15 | train 0.0665 | val 0.0673 | val AUROC 0.9980 | 42s  *
+  epoch  7/15 | train 0.0487 | val 0.0629 | val AUROC 0.9979 | 42s  *
+  epoch  8/15 | train 0.0419 | val 0.0704 | val AUROC 0.9974 | 42s
+  epoch  9/15 | train 0.0363 | val 0.0648 | val AUROC 0.9980 | 42s
+  epoch 10/15 | train 0.0288 | val 0.0644 | val AUROC 0.9980 | 42s
+  epoch 11/15 | train 0.0305 | val 0.0526 | val AUROC 0.9987 | 42s  *
+  epoch 12/15 | train 0.0254 | val 0.0520 | val AUROC 0.9987 | 42s  *
+  epoch 13/15 | train 0.0245 | val 0.0511 | val AUROC 0.9984 | 42s  *
+  epoch 14/15 | train 0.0215 | val 0.0492 | val AUROC 0.9989 | 42s  *
+  epoch 15/15 | train 0.0274 | val 0.0537 | val AUROC 0.9984 | 42s
+
+| Sampler | Backbone | Trainable params | Test AUROC | Sens @0.5 | Spec @0.5 | Pred. positive @0.5 | Sens @val-thr | Spec @val-thr | ECE |
+|---|---|---|---|---|---|---|---|---|---|
+| none | partial | 16.0M | 0.979 | 0.992 | 0.761 | 0.710 | 0.987 | 0.833 | 0.082 |
+| balanced | partial | 16.0M | 0.983 | 0.987 | 0.816 | 0.686 | 0.972 | 0.897 | 0.066 |
+| none | full | 24.6M | 0.983 | 0.992 | 0.791 | 0.699 | 0.982 | 0.880 | 0.071 |
+| balanced | full | 24.6M | 0.988 | 0.992 | 0.842 | 0.679 | 0.985 | 0.906 | 0.061 |

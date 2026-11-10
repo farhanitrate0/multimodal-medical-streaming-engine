@@ -1,0 +1,8 @@
+﻿Using downloaded and verified file: C:\Users\FARHAN\.medmnist\pneumoniamnist.npz
+epoch 1/3 | train loss 0.2526
+epoch 2/3 | train loss 0.0742
+epoch 3/3 | train loss 0.0308
+Using downloaded and verified file: C:\Users\FARHAN\.medmnist\pneumoniamnist.npz
+tested at 28px: AUROC 0.929 | sens 0.990 | spec 0.543 | predicted positive 0.790
+Using downloaded and verified file: C:\Users\FARHAN\.medmnist\pneumoniamnist_224.npz
+tested at 224px: AUROC 0.824 | sens 1.000 | spec 0.000 | predicted positive 1.000

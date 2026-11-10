@@ -1,0 +1,39 @@
+{
+  "recipe": "v1: 28px data upscaled, 3 epochs, lr 1e-4, partial backbone, natural sampling",
+  "test_28px": {
+    "auroc": 0.9287310979618671,
+    "predicted_positive_rate": 0.7900641025641025,
+    "mean_p": 0.7759196758270264,
+    "threshold": 0.5,
+    "accuracy": 0.8221153846153846,
+    "sensitivity": 0.9897435897435898,
+    "specificity": 0.5427350427350427,
+    "ppv": 0.7829614604462475,
+    "npv": 0.9694656488549618,
+    "f1": 0.8742921857304643,
+    "confusion_matrix": {
+      "tn": 127,
+      "fp": 107,
+      "fn": 4,
+      "tp": 386
+    }
+  },
+  "test_224px": {
+    "auroc": 0.8241946088099934,
+    "predicted_positive_rate": 1.0,
+    "mean_p": 0.9766131639480591,
+    "threshold": 0.5,
+    "accuracy": 0.625,
+    "sensitivity": 1.0,
+    "specificity": 0.0,
+    "ppv": 0.625,
+    "npv": 0.0,
+    "f1": 0.7692307692307693,
+    "confusion_matrix": {
+      "tn": 0,
+      "fp": 234,
+      "fn": 0,
+      "tp": 390
+    }
+  }
+}
