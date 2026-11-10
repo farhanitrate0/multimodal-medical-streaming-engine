@@ -1,0 +1,75 @@
+{
+  "threshold": 0.7540585398674011,
+  "samples": [
+    {
+      "file": "normal_106.png",
+      "test_index": 106,
+      "ground_truth": "normal",
+      "p_pneumonia": 0.0,
+      "outcome": "true negative"
+    },
+    {
+      "file": "normal_86.png",
+      "test_index": 86,
+      "ground_truth": "normal",
+      "p_pneumonia": 0.0,
+      "outcome": "true negative"
+    },
+    {
+      "file": "normal_558.png",
+      "test_index": 558,
+      "ground_truth": "normal",
+      "p_pneumonia": 0.0,
+      "outcome": "true negative"
+    },
+    {
+      "file": "pneumonia_230.png",
+      "test_index": 230,
+      "ground_truth": "pneumonia",
+      "p_pneumonia": 0.9994,
+      "outcome": "true positive"
+    },
+    {
+      "file": "pneumonia_336.png",
+      "test_index": 336,
+      "ground_truth": "pneumonia",
+      "p_pneumonia": 0.9993,
+      "outcome": "true positive"
+    },
+    {
+      "file": "pneumonia_10.png",
+      "test_index": 10,
+      "ground_truth": "pneumonia",
+      "p_pneumonia": 0.9993,
+      "outcome": "true positive"
+    },
+    {
+      "file": "hardcase_fp_103.png",
+      "test_index": 103,
+      "ground_truth": "normal",
+      "p_pneumonia": 0.9981,
+      "outcome": "false positive"
+    },
+    {
+      "file": "hardcase_fp_1.png",
+      "test_index": 1,
+      "ground_truth": "normal",
+      "p_pneumonia": 0.9939,
+      "outcome": "false positive"
+    },
+    {
+      "file": "hardcase_fn_88.png",
+      "test_index": 88,
+      "ground_truth": "pneumonia",
+      "p_pneumonia": 0.0052,
+      "outcome": "false negative"
+    },
+    {
+      "file": "hardcase_fn_571.png",
+      "test_index": 571,
+      "ground_truth": "pneumonia",
+      "p_pneumonia": 0.1109,
+      "outcome": "false negative"
+    }
+  ]
+}
