@@ -1,116 +1,818 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Multimodal Telemetry & Medical Engine</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Multimodal Medical Streaming Engine</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        body { 
-            background: #0f172a; 
-            color: white; 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-            text-align: center; 
-            margin: 0; 
-            padding: 20px; 
+        :root {
+            --bg: #f0f2f6;
+            --panel: #ffffff;
+            --panel-2: #f5f6f9;
+            --border: #dfe3ea;
+            --text: #262730;
+            --heading: #1f2a3c;
+            --muted: #6b7280;
+            --accent: #ff4b4b;
+            --accent-dark: #e63e3e;
+            --accent-soft: rgba(255, 75, 75, 0.08);
+            --ok: #177233;
+            --ok-soft: #dff3e6;
+            --alert: #b42332;
+            --alert-soft: #fde4e4;
+            --warn: #7a5b00;
+            --warn-soft: #fff6d6;
+            --info: #1d4f91;
+            --info-soft: #e3edfb;
+            --radius: 10px;
+            --shadow: 0 1px 2px rgba(31, 42, 60, 0.05);
+            --mono: ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace;
         }
-        h2 { color: #f8fafc; margin-bottom: 10px; }
-        .controls { margin: 20px 0; }
-        button { 
-            background: #334155; 
-            color: white; 
-            border: 2px solid #475569; 
-            padding: 10px 24px; 
-            margin: 0 8px; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            font-weight: bold; 
-            transition: all 0.2s ease;
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font: 15px/1.5 "Source Sans 3", "Source Sans Pro", -apple-system, "Segoe UI", Roboto, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
-        button.active { 
-            background: #3b82f6; 
-            border-color: #60a5fa; 
+        button { font: inherit; color: inherit; }
+        .deco { height: 3px; background: linear-gradient(90deg, #ff4b4b, #ffbd45); }
+
+        /* header */
+        header {
+            display: flex; align-items: center; justify-content: space-between; gap: 16px;
+            padding: 14px 28px; border-bottom: 1px solid var(--border); background: var(--panel);
         }
-        button:hover { background: #2563eb; }
-        .viewport { 
-            display: inline-block; 
-            padding: 10px; 
-            background: #1e293b; 
-            border-radius: 12px; 
-            border: 1px solid #334155; 
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+        .brand h1 { margin: 0; font-size: 19px; font-weight: 700; color: var(--heading); letter-spacing: 0.1px; }
+        .brand p { margin: 1px 0 0; font-size: 13px; color: var(--muted); }
+        .pill {
+            display: inline-flex; align-items: center; gap: 8px; white-space: nowrap;
+            padding: 5px 12px; border-radius: 999px; font-size: 13px; font-weight: 600;
+            border: 1px solid var(--border); color: var(--muted); background: var(--panel);
         }
-        img { 
-            border-radius: 8px; 
-            display: block; 
-            max-width: 100%; 
-            height: auto; 
+        .pill .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+        .pill.ok { color: var(--ok); background: var(--ok-soft); border-color: transparent; }
+        .pill.ok .dot { background: var(--ok); }
+        .pill.bad { color: var(--alert); background: var(--alert-soft); border-color: transparent; }
+        .pill.bad .dot { background: var(--alert); }
+
+        /* layout */
+        main {
+            flex: 1; width: 100%; max-width: 1440px; margin: 0 auto;
+            display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 20px; padding: 20px 28px;
         }
-        #stats { 
-            margin-top: 15px; 
-            font-size: 16px; 
-            font-weight: 500; 
-            color: #38bdf8; 
+        aside { display: flex; flex-direction: column; gap: 16px; }
+        .workspace { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+        .panel { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); }
+        .panel h2 {
+            margin: 0 0 12px; font-size: 12px; font-weight: 700; color: var(--muted);
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+
+        /* controls */
+        .mode-btn {
+            display: block; width: 100%; text-align: left; cursor: pointer;
+            background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
+            padding: 10px 12px; margin-bottom: 8px; transition: border-color .15s, background .15s;
+        }
+        .mode-btn:last-child { margin-bottom: 0; }
+        .mode-btn strong { display: block; font-size: 14px; font-weight: 600; color: var(--heading); }
+        .mode-btn span { font-size: 13px; color: var(--muted); }
+        .mode-btn:hover { border-color: #c4cad4; }
+        .mode-btn.active { border-color: var(--accent); background: var(--accent-soft); }
+        .mode-btn.active strong { color: var(--accent); }
+
+        .segmented { display: grid; grid-template-columns: 1fr 1fr; background: var(--panel-2); border: 1px solid var(--border); border-radius: 8px; padding: 3px; margin-bottom: 12px; }
+        .segmented button { background: transparent; border: 0; border-radius: 6px; padding: 6px; cursor: pointer; color: var(--muted); font-weight: 600; }
+        .segmented button.active { background: var(--panel); color: var(--text); box-shadow: 0 1px 3px rgba(31, 42, 60, .12); }
+
+        .dropzone {
+            border: 1.5px dashed #c9ced8; border-radius: 8px; padding: 22px 14px; text-align: center;
+            cursor: pointer; background: var(--panel-2); transition: border-color .15s, background .15s;
+        }
+        .dropzone:hover, .dropzone.drag { border-color: var(--accent); background: var(--accent-soft); }
+        .dropzone strong { color: var(--accent); }
+        .dropzone p { margin: 0; color: var(--text); font-size: 14px; }
+        .dropzone small { display: block; margin-top: 6px; color: var(--muted); font-size: 12px; }
+
+        .btn {
+            width: 100%; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-weight: 600;
+            border: 1px solid #c9ced8; background: var(--panel); transition: border-color .15s, color .15s, background .15s;
+        }
+        .btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+        .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+        .btn.primary:hover:not(:disabled) { background: var(--accent-dark); color: #fff; }
+        .btn:disabled { opacity: .45; cursor: not-allowed; }
+        .btn-row { display: grid; gap: 8px; }
+
+        .note { margin-top: 12px; padding: 10px 12px; border-radius: 8px; font-size: 13px; line-height: 1.45; }
+        .note.warn { background: var(--warn-soft); color: var(--warn); }
+        .note.info { background: var(--info-soft); color: var(--info); }
+
+        dl.kv { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 6px 12px; font-size: 13px; }
+        dl.kv dt { color: var(--muted); }
+        dl.kv dd { margin: 0; text-align: right; font-family: var(--mono); color: var(--heading); }
+
+        /* viewer */
+        .viewer { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .pane { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; min-height: 360px; box-shadow: var(--shadow); }
+        .pane-head { display: flex; justify-content: space-between; align-items: center; padding: 9px 12px; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--muted); }
+        .pane-head b { color: var(--heading); font-weight: 600; }
+        .pane-body { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; padding: 12px; background: var(--panel-2); }
+        .pane-body img, .pane-body video { width: 100%; max-width: 440px; max-height: 56vh; object-fit: contain; display: block; border-radius: 6px; }
+        .empty { color: var(--muted); font-size: 14px; font-style: italic; text-align: center; padding: 24px; }
+        .legend { display: flex; align-items: center; gap: 6px; font-size: 12px; }
+        .legend .bar { width: 72px; height: 8px; border-radius: 4px; background: linear-gradient(90deg, #00007f, #0000ff, #00ffff, #ffff00, #ff0000, #7f0000); }
+        .spinner { position: absolute; top: 12px; right: 12px; width: 18px; height: 18px; border: 2px solid rgba(31, 42, 60, .15); border-top-color: var(--accent); border-radius: 50%; animation: spin .8s linear infinite; display: none; }
+        .busy .spinner { display: block; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* results */
+        .results { display: grid; grid-template-columns: minmax(240px, 1.2fr) 2fr; gap: 20px; align-items: center; }
+        .verdict { display: flex; flex-direction: column; gap: 6px; }
+        .badge { display: inline-flex; align-self: flex-start; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 8px; font-weight: 700; font-size: 14px; }
+        .badge.idle { background: var(--panel-2); color: var(--muted); border: 1px solid var(--border); }
+        .badge.pos { background: var(--alert-soft); color: var(--alert); }
+        .badge.neg { background: var(--ok-soft); color: var(--ok); }
+        .badge.track { background: var(--info-soft); color: var(--info); }
+        .verdict small { color: var(--muted); font-size: 13px; }
+
+        .prob { margin-top: 2px; }
+        .prob-track { position: relative; height: 10px; border-radius: 5px; background: linear-gradient(90deg, #dff3e6, #fde4e4); }
+        .prob-fill { position: absolute; inset: 0 auto 0 0; width: 0; border-radius: 5px; background: var(--accent); transition: width .3s ease, background .3s; }
+        .prob-thr { position: absolute; top: -4px; bottom: -4px; width: 2px; background: var(--heading); left: 50%; }
+        .prob-scale { position: relative; display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-top: 6px; font-family: var(--mono); height: 32px; }
+        #thr-label { position: absolute; top: 16px; transform: translateX(-50%); color: var(--text); white-space: nowrap; }
+
+        .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 14px; }
+        .stat { background: var(--panel-2); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; }
+        .stat span { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .8px; }
+        .stat b { font-family: var(--mono); font-size: 16px; font-weight: 600; color: var(--heading); }
+
+        /* batch */
+        .batch-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
+        .batch-head h2 { margin: 0; }
+        .batch-summary { flex: 1; font-size: 13px; color: var(--muted); }
+        .batch-summary b { font-weight: 700; }
+        .batch-summary .pos { color: var(--alert); }
+        .batch-summary .neg { color: var(--ok); }
+        .batch-nav { display: flex; align-items: center; gap: 6px; }
+        .btn.sm { width: auto; padding: 4px 10px; font-size: 13px; }
+        .batch-pos { font-family: var(--mono); font-size: 13px; min-width: 64px; text-align: center; }
+        .batch-bar { height: 4px; background: var(--panel-2); border-radius: 2px; overflow: hidden; margin-bottom: 10px; }
+        .batch-bar div { height: 100%; width: 0; background: var(--accent); transition: width .2s; }
+        .thumbs { display: flex; gap: 8px; overflow-x: auto; padding: 2px 2px 6px; }
+        .thumb { flex: 0 0 auto; width: 72px; padding: 0; border: 0; background: none; cursor: pointer; text-align: center; }
+        .thumb img, .thumb .ph { width: 72px; height: 72px; object-fit: cover; border-radius: 6px; border: 2px solid var(--border); display: block; background: var(--panel-2); }
+        .thumb.pending img { opacity: .45; }
+        .thumb.pos img { border-color: var(--alert); }
+        .thumb.neg img { border-color: var(--ok); }
+        .thumb.err img, .thumb.err .ph { border-color: var(--warn); }
+        .thumb.sel img, .thumb.sel .ph { outline: 2px solid var(--heading); outline-offset: 2px; }
+        .thumb small { display: block; margin-top: 3px; font-family: var(--mono); font-size: 11px; color: var(--muted); }
+        .thumb.pos small { color: var(--alert); }
+        .thumb.neg small { color: var(--ok); }
+
+        footer { padding: 12px 28px 18px; color: var(--muted); font-size: 12.5px; text-align: center; }
+
+        /* toast */
+        #toast {
+            position: fixed; right: 20px; bottom: 20px; max-width: 360px; z-index: 10;
+            padding: 12px 16px; border-radius: 8px; background: var(--panel); border: 1px solid var(--border);
+            box-shadow: 0 8px 24px rgba(31, 42, 60, .15); font-size: 14px;
+            transform: translateY(160%); visibility: hidden; transition: transform .25s ease, visibility 0s linear .25s;
+        }
+        #toast.show { transform: translateY(0); visibility: visible; transition: transform .25s ease; }
+        #toast.error { background: var(--alert-soft); border-color: transparent; color: var(--alert); }
+
+        .hidden { display: none !important; }
+
+        @media (max-width: 960px) {
+            header { padding: 12px 16px; }
+            main { grid-template-columns: minmax(0, 1fr); padding: 16px; }
+            .viewer, .results { grid-template-columns: minmax(0, 1fr); }
+            .brand p { display: none; }
+            .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .pane { min-height: 260px; }
+            footer { padding: 12px 16px 18px; }
         }
     </style>
 </head>
 <body>
-    <h2>Multimodal Telemetry & Medical Engine</h2>
-    
-    <div class="controls">
-        <button id="btn-medical" class="active" onclick="setMode('medical')">1. Radiological Diagnosis (X-Ray)</button>
-        <button id="btn-spatial" onclick="setMode('spatial')">2. Spatial Telemetry (Face & Hands)</button>
+<div class="deco"></div>
+
+<header>
+    <div class="brand">
+        <h1>Multimodal Medical Streaming Engine</h1>
+        <p>Research prototype · not for clinical use</p>
     </div>
+    <div id="conn" class="pill"><span class="dot"></span><span id="conn-text">Connecting…</span></div>
+</header>
 
-    <div class="viewport">
-        <video id="webcam" autoplay hidden></video>
-        <canvas id="canvas" hidden></canvas>
-        <img id="overlay" alt="Awaiting Stream..." width="400" height="400" />
-    </div>
-    
-    <div id="stats">Initializing Stream...</div>
+<main>
+    <aside>
+        <section class="panel">
+            <h2>Mode</h2>
+            <button class="mode-btn active" id="mode-medical" data-mode="medical">
+                <strong>Radiological diagnosis</strong>
+                <span>Pneumonia classification + Grad-CAM</span>
+            </button>
+            <button class="mode-btn" id="mode-spatial" data-mode="spatial">
+                <strong>Spatial kinematics</strong>
+                <span>Face mesh + hand landmarks</span>
+            </button>
+        </section>
 
-    <script>
-        let currentMode = 'medical';
+        <section class="panel">
+            <h2>Input</h2>
+            <div class="segmented">
+                <button id="src-upload" class="active" data-src="upload">Upload</button>
+                <button id="src-camera" data-src="camera">Camera</button>
+            </div>
 
-        function setMode(mode) {
-            currentMode = mode;
-            document.getElementById('btn-medical').classList.toggle('active', mode === 'medical');
-            document.getElementById('btn-spatial').classList.toggle('active', mode === 'spatial');
-        }
+            <div id="upload-ui">
+                <input type="file" id="file" accept="image/png,image/jpeg,image/bmp,image/webp" multiple hidden>
+                <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Upload images">
+                    <p><strong>Click to upload</strong> or drag images here</p>
+                    <small id="dz-hint">One image, or up to 100 for a batch run · sent losslessly</small>
+                </div>
+            </div>
 
-        const ws = new WebSocket(`ws://localhost:8000/ws/stream`);
-        const video = document.getElementById('webcam');
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
+            <div id="camera-ui" class="hidden">
+                <div class="btn-row">
+                    <button class="btn" id="cam-toggle">Start camera</button>
+                    <button class="btn primary hidden" id="cam-capture" disabled>Capture still &amp; analyze</button>
+                </div>
+                <div class="note warn hidden" id="cam-warning">
+                    <b>Experimental for radiographs.</b> Filming a screen adds glare, moiré and motion blur the model never saw in training. Capture a single steady still instead of streaming, and prefer file upload for evaluation.
+                </div>
+                <div class="note info hidden" id="cam-info">
+                    Live tracking at up to 5 FPS. A new frame is sent only after the previous one returns.
+                </div>
+            </div>
+        </section>
 
+        <section class="panel" id="model-panel">
+            <h2>Model</h2>
+            <dl class="kv">
+                <dt>Architecture</dt><dd>ResNet50</dd>
+                <dt>Dataset</dt><dd>PneumoniaMNIST</dd>
+                <dt>Test AUROC</dt><dd id="m-auroc">-</dd>
+                <dt>Sensitivity</dt><dd id="m-sens">-</dd>
+                <dt>Specificity</dt><dd id="m-spec">-</dd>
+                <dt>Threshold</dt><dd id="m-thr">-</dd>
+                <dt>Device</dt><dd id="m-dev">-</dd>
+            </dl>
+        </section>
+    </aside>
+
+    <section class="workspace">
+        <div class="viewer">
+            <div class="pane">
+                <div class="pane-head"><b>Input</b><span id="input-meta">-</span></div>
+                <div class="pane-body">
+                    <img id="input-img" class="hidden" alt="Input image">
+                    <video id="video" class="hidden" autoplay playsinline muted></video>
+                    <div class="empty" id="input-empty">Upload a chest radiograph to begin</div>
+                </div>
+            </div>
+            <div class="pane" id="output-pane">
+                <div class="pane-head">
+                    <b id="output-title">Grad-CAM attention</b>
+                    <span class="legend" id="legend">low <span class="bar"></span> high</span>
+                </div>
+                <div class="pane-body">
+                    <img id="output-img" class="hidden" alt="Model output overlay">
+                    <div class="empty" id="output-empty">The model's focal regions appear here</div>
+                    <div class="spinner"></div>
+                </div>
+            </div>
+        </div>
+
+        <section class="panel hidden" id="batch-panel">
+            <div class="batch-head">
+                <h2>Batch</h2>
+                <span class="batch-summary" id="batch-summary"></span>
+                <div class="batch-nav">
+                    <button class="btn sm" id="batch-prev" aria-label="Previous image">&#8249;</button>
+                    <span class="batch-pos" id="batch-pos">0 / 0</span>
+                    <button class="btn sm" id="batch-next" aria-label="Next image">&#8250;</button>
+                    <button class="btn sm" id="batch-csv" disabled>Export CSV</button>
+                </div>
+            </div>
+            <div class="batch-bar"><div id="batch-bar"></div></div>
+            <div class="thumbs" id="thumbs"></div>
+        </section>
+
+        <section class="panel">
+            <h2>Analysis</h2>
+
+            <div id="medical-results">
+                <div class="results">
+                    <div class="verdict">
+                        <span class="badge idle" id="verdict">Awaiting image</span>
+                        <small id="verdict-sub">Decision uses the validation-selected threshold.</small>
+                    </div>
+                    <div class="prob">
+                        <div class="prob-track">
+                            <div class="prob-fill" id="prob-fill"></div>
+                            <div class="prob-thr" id="prob-thr" title="Decision threshold"></div>
+                        </div>
+                        <div class="prob-scale"><span>0.0 normal</span><span id="thr-label">threshold</span><span>pneumonia 1.0</span></div>
+                    </div>
+                </div>
+                <div class="stats">
+                    <div class="stat"><span>P(pneumonia)</span><b id="s-prob">-</b></div>
+                    <div class="stat"><span>Logit</span><b id="s-logit">-</b></div>
+                    <div class="stat"><span>Threshold</span><b id="s-thr">-</b></div>
+                    <div class="stat"><span>Latency</span><b id="s-lat-m">-</b></div>
+                </div>
+            </div>
+
+            <div id="spatial-results" class="hidden">
+                <div class="verdict">
+                    <span class="badge idle" id="track-badge">Tracking idle</span>
+                </div>
+                <div class="stats">
+                    <div class="stat"><span>Face</span><b id="s-face">-</b></div>
+                    <div class="stat"><span>Hands</span><b id="s-hands">-</b></div>
+                    <div class="stat"><span>Landmarks</span><b id="s-lms">-</b></div>
+                    <div class="stat"><span>Throughput</span><b id="s-fps">-</b></div>
+                </div>
+            </div>
+        </section>
+    </section>
+</main>
+
+<footer>
+    Experimental decision-support research software. Outputs are probabilistic and must be reviewed by a qualified clinician. Images are processed in memory and never written to disk.
+</footer>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+    const $ = (id) => document.getElementById(id);
+    const state = {
+        mode: 'medical',
+        source: 'upload',
+        ws: null,
+        stream: null,
+        loop: null,
+        inFlight: false,
+        lastUpload: null,  // last upload as png
+        threshold: 0.5,
+        frameTimes: [],
+        batch: null,  // { run, items, idx, t0, t1 }
+        batchRun: 0,
+    };
+    const MAX_FILES = 100;
+
+    // same origin, or localhost when opened as a file
+    const host = location.host || 'localhost:8000';
+    const secure = location.protocol === 'https:';
+    const httpBase = location.protocol.startsWith('http') ? '' : 'http://localhost:8000';
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+
+    // ui helpers
+    let toastTimer;
+    function toast(msg, isError = false) {
+        const t = $('toast');
+        t.textContent = msg;
+        t.classList.toggle('error', isError);
+        t.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => t.classList.remove('show'), 3500);
+    }
+    const show = (el, on) => el.classList.toggle('hidden', !on);
+    const busy = (on) => $('output-pane').classList.toggle('busy', on);
+
+    function setConn(kind, text) {
+        $('conn').className = 'pill ' + kind;
+        $('conn-text').textContent = text;
+    }
+
+    function setThreshold(t) {
+        state.threshold = t;
+        $('m-thr').textContent = t.toFixed(2);
+        $('s-thr').textContent = t.toFixed(2);
+        $('prob-thr').style.left = (t * 100) + '%';
+        $('thr-label').style.left = (t * 100) + '%';
+        $('thr-label').textContent = 't = ' + t.toFixed(2);
+    }
+
+    function resetOutput() {
+        show($('output-img'), false);
+        show($('output-empty'), true);
+        $('verdict').className = 'badge idle';
+        $('verdict').textContent = state.mode === 'medical' ? 'Awaiting image' : '';
+        $('prob-fill').style.width = '0';
+        ['s-prob', 's-logit', 's-lat-m', 's-face', 's-hands', 's-lms', 's-fps'].forEach(id => $(id).textContent = '-');
+        $('track-badge').className = 'badge idle';
+        $('track-badge').textContent = 'Tracking idle';
+    }
+
+    // model card
+    fetch(httpBase + '/health').then(r => r.json()).then(h => {
+        const m = h.model || {};
+        const pct = (v) => v == null ? '-' : (100 * v).toFixed(1) + '%';
+        $('m-auroc').textContent = m.test_auroc == null ? '-' : m.test_auroc.toFixed(3);
+        $('m-sens').textContent = pct(m.test_sensitivity);
+        $('m-spec').textContent = pct(m.test_specificity);
+        $('m-dev').textContent = (h.device || '-').toUpperCase();
+        setThreshold(h.decision_threshold ?? 0.5);
+        if (!h.weights_loaded) toast('Fine-tuned weights not loaded: predictions are not meaningful.', true);
+    }).catch(() => setThreshold(0.5));
+
+    // websocket
+    function connect() {
+        setConn('', 'Connecting…');
+        const ws = new WebSocket(`${secure ? 'wss' : 'ws'}://${host}/ws/stream`);
+        state.ws = ws;
         ws.onopen = () => {
-            navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
-                video.srcObject = stream;
-                setInterval(() => {
-                    if (video.readyState === video.HAVE_ENOUGH_DATA) {
-                        canvas.width = video.videoWidth;
-                        canvas.height = video.videoHeight;
-                        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                        
-                        const payload = {
-                            image: canvas.toDataURL('image/jpeg', 0.5),
-                            mode: currentMode
-                        };
-                        ws.send(JSON.stringify(payload));
-                    }
-                }, 100); // 10 FPS streaming loop
-            }).catch(err => {
-                document.getElementById('stats').innerText = "Webcam Error: Check permissions.";
-            });
+            setConn('ok', 'Engine connected');
+            if (state.lastUpload && state.source === 'upload') send(state.lastUpload);
         };
-
-        ws.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            document.getElementById('overlay').src = data.overlay;
-            document.getElementById('stats').innerText = `${data.status}`;
-        };
-
         ws.onclose = () => {
-            document.getElementById('stats').innerText = "Connection Lost. Restart Server.";
+            state.inFlight = false;
+            busy(false);
+            failPending('Connection lost');
+            setConn('bad', 'Disconnected · retrying');
+            setTimeout(connect, 2000);
         };
-    </script>
+        ws.onmessage = (ev) => {
+            const data = JSON.parse(ev.data);
+            if (data.id) { onBatchReply(data); return; }  // batch replies carry an id
+            state.inFlight = false;
+            busy(false);
+            if (data.error) { toast(data.status || data.error, true); return; }
+            if (data.mode !== state.mode) return;  // stale reply
+            if (data.overlay) {
+                $('output-img').src = data.overlay;
+                show($('output-img'), true);
+                show($('output-empty'), false);
+            }
+            data.mode === 'medical' ? renderMedical(data) : renderSpatial(data);
+        };
+    }
+
+    function send(dataUrl) {
+        if (!state.ws || state.ws.readyState !== WebSocket.OPEN) {
+            toast('Engine not connected yet.', true);
+            return false;
+        }
+        state.inFlight = true;
+        busy(true);
+        state.ws.send(JSON.stringify({ image: dataUrl, mode: state.mode }));
+        return true;
+    }
+
+    // renderers
+    function renderMedical(d) {
+        const pos = d.prediction === 1;
+        $('verdict').className = 'badge ' + (pos ? 'pos' : 'neg');
+        $('verdict').textContent = pos ? 'Pneumonia suspected' : 'No pneumonia detected';
+        $('verdict-sub').textContent = `P(pneumonia) ${d.probability.toFixed(3)} is ${pos ? 'above' : 'below'} the decision threshold of ${d.threshold.toFixed(2)}.`;
+        $('prob-fill').style.width = (100 * d.probability).toFixed(1) + '%';
+        $('prob-fill').style.background = pos ? 'var(--accent)' : 'var(--ok)';
+        $('s-prob').textContent = d.probability.toFixed(3);
+        $('s-logit').textContent = d.logit.toFixed(2);
+        $('s-lat-m').textContent = d.latency_ms.toFixed(0) + ' ms';
+        if (d.threshold !== state.threshold) setThreshold(d.threshold);
+    }
+
+    function renderSpatial(d) {
+        const face = d.landmarks.face.length;
+        const hands = d.landmarks.hands.length;
+        const now = performance.now();
+        state.frameTimes = state.frameTimes.filter(t => now - t < 2000).concat(now);
+        const fps = state.frameTimes.length / 2;
+        $('track-badge').className = 'badge ' + (face || hands ? 'track' : 'idle');
+        $('track-badge').textContent = face || hands ? 'Tracking active' : 'No subject detected';
+        $('s-face').textContent = face ? 'Yes' : 'No';
+        $('s-hands').textContent = hands;
+        $('s-lms').textContent = face + hands * 21;
+        $('s-fps').textContent = `${fps.toFixed(1)} fps`;
+    }
+
+    // mode / source
+    function setMode(mode) {
+        if (mode === state.mode) return;
+        state.mode = mode;
+        document.querySelectorAll('.mode-btn').forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
+        const medical = mode === 'medical';
+        $('output-title').textContent = medical ? 'Grad-CAM attention' : 'Landmark overlay';
+        show($('legend'), medical);
+        show($('medical-results'), medical);
+        show($('spatial-results'), !medical);
+        show($('model-panel'), medical);
+        $('output-empty').textContent = medical ? "The model's focal regions appear here" : 'Tracked landmarks appear here';
+        $('dz-hint').textContent = medical ? 'One image, or up to 100 for a batch run · sent losslessly' : 'A photo with a face or hands · PNG / JPEG';
+        clearBatch();
+        resetOutput();
+        setSource(medical ? 'upload' : 'camera');  // x-rays from files, kinematics from camera
+        if (state.source === 'upload' && state.lastUpload) send(state.lastUpload);
+    }
+
+    function setSource(src) {
+        state.source = src;
+        $('src-upload').classList.toggle('active', src === 'upload');
+        $('src-camera').classList.toggle('active', src === 'camera');
+        show($('upload-ui'), src === 'upload');
+        show($('camera-ui'), src === 'camera');
+        const medical = state.mode === 'medical';
+        show($('cam-capture'), medical);
+        show($('cam-warning'), medical);
+        show($('cam-info'), !medical);
+
+        if (src === 'upload') {
+            stopCamera();
+            show($('video'), false);
+            show($('input-img'), !!state.lastUpload);
+            show($('input-empty'), !state.lastUpload);
+            $('input-empty').textContent = medical ? 'Upload a chest radiograph to begin' : 'Upload a photo to track';
+        } else {
+            show($('input-img'), false);
+            if (!medical) startCamera(); else updateCameraUi();
+        }
+    }
+
+    // upload
+    function readAsPng(file) {
+        // native res png, no jpeg
+        return new Promise((resolve, reject) => {
+            const url = URL.createObjectURL(file);
+            const img = new Image();
+            img.onload = () => {
+                canvas.width = img.naturalWidth;
+                canvas.height = img.naturalHeight;
+                ctx.drawImage(img, 0, 0);
+                URL.revokeObjectURL(url);
+                resolve({ dataUrl: canvas.toDataURL('image/png'), w: img.naturalWidth, h: img.naturalHeight });
+            };
+            img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('unreadable')); };
+            img.src = url;
+        });
+    }
+
+    async function handleFile(file) {
+        try {
+            const { dataUrl, w, h } = await readAsPng(file);
+            state.lastUpload = dataUrl;
+            $('input-img').src = dataUrl;
+            $('input-meta').textContent = `${file.name} · ${w}×${h}`;
+            show($('input-img'), true);
+            show($('input-empty'), false);
+            if (send(dataUrl)) toast('Image ingested. Running inference…');
+        } catch { toast('Could not read that image.', true); }
+    }
+
+    function handleFiles(list) {
+        const files = [...list].filter(f => f.type.startsWith('image/'));
+        if (!files.length) { toast('Please choose PNG or JPEG images.', true); return; }
+        if (files.length === 1 || state.mode !== 'medical') { clearBatch(); handleFile(files[0]); return; }
+        if (files.length > MAX_FILES) toast(`Only the first ${MAX_FILES} images are analyzed.`);
+        startBatch(files.slice(0, MAX_FILES));
+    }
+
+    // batch: send all, replies come back by id in any order
+    const isOpen = () => state.ws && state.ws.readyState === WebSocket.OPEN;
+
+    async function startBatch(files) {
+        if (!isOpen()) { toast('Engine not connected yet.', true); return; }
+        const run = ++state.batchRun;
+        state.lastUpload = null;
+        const items = files.map((f, i) => ({ id: `b${run}-${i}`, name: f.name, dataUrl: null, w: 0, h: 0, result: null, error: null }));
+        state.batch = { run, items, idx: 0, t0: performance.now(), t1: null };
+        show($('batch-panel'), true);
+        $('thumbs').innerHTML = items.map((it, i) =>
+            `<button class="thumb pending" data-i="${i}" title="${it.name.replace(/"/g, '&quot;')}"><div class="ph"></div><small>…</small></button>`).join('');
+        updateBatchUi();
+        showItem(0);
+        toast(`Batch of ${files.length} images queued.`);
+
+        for (let i = 0; i < files.length; i++) {
+            const it = items[i];
+            try { Object.assign(it, await readAsPng(files[i])); } catch { it.error = 'Unreadable image'; }
+            if (!state.batch || state.batch.run !== run) return;  // superseded
+            const el = thumbEl(i);
+            if (it.dataUrl) {
+                el.querySelector('.ph').outerHTML = `<img src="${it.dataUrl}" alt="">`;
+                if (isOpen()) state.ws.send(JSON.stringify({ id: it.id, image: it.dataUrl, mode: 'medical' }));
+                else it.error = 'Not connected';
+            }
+            if (it.error) markThumb(i);
+            if (i === state.batch.idx) showItem(i);
+        }
+        updateBatchUi();
+    }
+
+    function onBatchReply(d) {
+        const b = state.batch;
+        if (!b || !d.id.startsWith(`b${b.run}-`)) return;  // old batch
+        const i = +d.id.split('-')[1];
+        const it = b.items[i];
+        if (!it) return;
+        if (d.error) it.error = d.error; else it.result = d;
+        markThumb(i);
+        updateBatchUi();
+        if (i === b.idx) showItem(i);
+    }
+
+    const thumbEl = (i) => $('thumbs').children[i];
+
+    function markThumb(i) {
+        const it = state.batch.items[i];
+        const el = thumbEl(i);
+        const pos = it.result && it.result.prediction === 1;
+        el.className = 'thumb ' + (it.error ? 'err' : it.result ? (pos ? 'pos' : 'neg') : 'pending') + (i === state.batch.idx ? ' sel' : '');
+        el.querySelector('small').textContent = it.error ? 'error' : it.result ? it.result.probability.toFixed(2) : '…';
+    }
+
+    function updateBatchUi() {
+        const b = state.batch;
+        if (!b) return;
+        const n = b.items.length;
+        const done = b.items.filter(it => it.result || it.error);
+        const pos = done.filter(it => it.result && it.result.prediction === 1).length;
+        const errs = done.filter(it => it.error).length;
+        if (done.length === n && !b.t1) b.t1 = performance.now();
+        const secs = ((b.t1 || performance.now()) - b.t0) / 1000;
+        $('batch-summary').innerHTML =
+            `${done.length}/${n} analyzed · <b class="pos">${pos} pneumonia suspected</b> · <b class="neg">${done.length - pos - errs} normal</b>` +
+            (errs ? ` · ${errs} failed` : '') +
+            (b.t1 ? ` · ${secs.toFixed(1)} s (${(n / secs).toFixed(1)} img/s)` : '');
+        $('batch-bar').style.width = (100 * done.length / n) + '%';
+        $('batch-pos').textContent = `${b.idx + 1} / ${n}`;
+        $('batch-csv').disabled = done.length === 0;
+    }
+
+    function showItem(i) {
+        const b = state.batch;
+        if (!b) return;
+        const n = b.items.length;
+        const prev = b.idx;
+        b.idx = (i + n) % n;
+        markThumb(prev);
+        markThumb(b.idx);
+        thumbEl(b.idx).scrollIntoView({ block: 'nearest', inline: 'nearest' });
+        const it = b.items[b.idx];
+        show($('video'), false);
+        if (it.dataUrl) {
+            $('input-img').src = it.dataUrl;
+            show($('input-img'), true);
+            show($('input-empty'), false);
+        }
+        $('input-meta').textContent = `${it.name}${it.w ? ` · ${it.w}×${it.h}` : ''}`;
+        if (it.result) {
+            busy(false);
+            $('output-img').src = it.result.overlay;
+            show($('output-img'), true);
+            show($('output-empty'), false);
+            renderMedical(it.result);
+        } else {
+            resetOutput();
+            busy(!it.error);
+            $('verdict').textContent = it.error ? `Failed: ${it.error}` : 'Queued…';
+        }
+        updateBatchUi();
+    }
+
+    function failPending(reason) {
+        const b = state.batch;
+        if (!b) return;
+        b.items.forEach((it, i) => { if (!it.result && !it.error) { it.error = reason; markThumb(i); } });
+        updateBatchUi();
+    }
+
+    function clearBatch() {
+        state.batch = null;
+        state.batchRun++;
+        show($('batch-panel'), false);
+        $('thumbs').innerHTML = '';
+        busy(false);
+    }
+
+    function exportCsv() {
+        const b = state.batch;
+        if (!b) return;
+        const q = (s) => `"${String(s).replace(/"/g, '""')}"`;
+        const rows = [['file', 'prediction', 'p_pneumonia', 'logit', 'threshold', 'latency_ms', 'error']];
+        b.items.forEach(it => {
+            const r = it.result;
+            rows.push([it.name, r ? (r.prediction ? 'pneumonia suspected' : 'normal') : '', r ? r.probability.toFixed(4) : '',
+                       r ? r.logit.toFixed(3) : '', r ? r.threshold.toFixed(3) : '', r ? r.latency_ms : '', it.error || '']);
+        });
+        const blob = new Blob([rows.map(r => r.map(q).join(',')).join('\n')], { type: 'text/csv' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'batch_results.csv';
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    }
+
+    $('thumbs').addEventListener('click', (e) => { const t = e.target.closest('.thumb'); if (t) showItem(+t.dataset.i); });
+    $('batch-prev').addEventListener('click', () => state.batch && showItem(state.batch.idx - 1));
+    $('batch-next').addEventListener('click', () => state.batch && showItem(state.batch.idx + 1));
+    $('batch-csv').addEventListener('click', exportCsv);
+    document.addEventListener('keydown', (e) => {
+        if (!state.batch || /INPUT|TEXTAREA/.test(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowLeft') showItem(state.batch.idx - 1);
+        if (e.key === 'ArrowRight') showItem(state.batch.idx + 1);
+    });
+    // swipe on the viewer
+    let touchX = null;
+    document.querySelector('.viewer').addEventListener('touchstart', (e) => { touchX = e.touches[0].clientX; }, { passive: true });
+    document.querySelector('.viewer').addEventListener('touchend', (e) => {
+        if (!state.batch || touchX === null) return;
+        const dx = e.changedTouches[0].clientX - touchX;
+        if (Math.abs(dx) > 40) showItem(state.batch.idx + (dx < 0 ? 1 : -1));
+        touchX = null;
+    });
+
+    const dz = $('dropzone');
+    dz.addEventListener('click', () => $('file').click());
+    dz.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $('file').click(); } });
+    $('file').addEventListener('change', (e) => { handleFiles(e.target.files); e.target.value = ''; });
+    ['dragenter', 'dragover'].forEach(ev => dz.addEventListener(ev, (e) => { e.preventDefault(); dz.classList.add('drag'); }));
+    ['dragleave', 'drop'].forEach(ev => dz.addEventListener(ev, (e) => { e.preventDefault(); dz.classList.remove('drag'); }));
+    dz.addEventListener('drop', (e) => handleFiles(e.dataTransfer.files));
+
+    // camera
+    function updateCameraUi() {
+        const on = !!state.stream;
+        $('cam-toggle').textContent = on ? 'Stop camera' : 'Start camera';
+        $('cam-capture').disabled = !on;
+        show($('video'), on);
+        show($('input-empty'), !on);
+        if (!on) $('input-empty').textContent = 'Camera is off';
+    }
+
+    async function startCamera() {
+        if (state.stream) { updateCameraUi(); return; }
+        try {
+            state.stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+            $('video').srcObject = state.stream;
+            const track = state.stream.getVideoTracks()[0].getSettings();
+            $('input-meta').textContent = `Camera · ${track.width || '?'}×${track.height || '?'}`;
+            startLoop();
+        } catch (err) {
+            toast('Camera unavailable or permission denied.', true);
+            state.stream = null;
+        }
+        updateCameraUi();
+    }
+
+    function stopCamera() {
+        clearInterval(state.loop);
+        state.loop = null;
+        if (state.stream) state.stream.getTracks().forEach(t => t.stop());
+        state.stream = null;
+        $('video').srcObject = null;
+        updateCameraUi();
+    }
+
+    function grabFrame(type, quality) {
+        const v = $('video');
+        if (v.readyState < v.HAVE_ENOUGH_DATA) return null;
+        canvas.width = v.videoWidth;
+        canvas.height = v.videoHeight;
+        ctx.drawImage(v, 0, 0);
+        return canvas.toDataURL(type, quality);
+    }
+
+    function startLoop() {
+        clearInterval(state.loop);
+        // spatial only, 5 fps, one frame in flight
+        state.loop = setInterval(() => {
+            if (state.mode !== 'spatial' || state.source !== 'camera' || state.inFlight) return;
+            const frame = grabFrame('image/jpeg', 0.8);
+            if (frame) send(frame);
+        }, 200);
+    }
+
+    $('cam-toggle').addEventListener('click', () => state.stream ? stopCamera() : startCamera());
+    $('cam-capture').addEventListener('click', () => {
+        const frame = grabFrame('image/png');  // lossless still
+        clearBatch();
+        if (frame && send(frame)) toast('Still captured. Running inference…');
+    });
+
+    // wire up
+    document.querySelectorAll('.mode-btn').forEach(b => b.addEventListener('click', () => setMode(b.dataset.mode)));
+    $('src-upload').addEventListener('click', () => setSource('upload'));
+    $('src-camera').addEventListener('click', () => setSource('camera'));
+
+    setThreshold(0.5);
+    connect();
+})();
+</script>
 </body>
 </html>
