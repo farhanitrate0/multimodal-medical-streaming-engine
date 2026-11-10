@@ -3,17 +3,24 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "multimodal-medical-engine"
-version = "3.0.0"
-description = "High-throughput ML engine for 3D volumes, biosignals, and streaming telemetry."
+name = "multimodal-medical-streaming-engine"
+version = "2.0.0"
+description = "Real-time explainable radiological classification (ResNet50 + Grad-CAM) and spatial kinematic tracking over WebSockets."
+readme = "README.md"
 authors = [{ name = "Mohd Farhan Ali" }]
 requires-python = ">=3.10"
+# pinned to the env the results came from
 dependencies = [
-    "torch==2.4.0", "torchvision==0.19.0", "fastapi==0.111.1", "uvicorn==0.30.1",
-    "websockets==13.0", "opencv-python-headless==4.10.0.84", "mediapipe==0.10.14",
-    "pillow==10.4.0", "scikit-learn==1.5.1", "nibabel==5.2.1", "plotly==5.22.0",
-    "scipy==1.13.1", "numpy==1.26.4", "medmnist==3.0.1"
+    "torch==2.5.1", "torchvision==0.20.1",
+    "fastapi==0.111.1", "uvicorn==0.30.1", "websockets==13.0",
+    "mediapipe==0.10.14", "opencv-contrib-python==4.11.0.86",
+    "numpy==2.2.6", "pillow==10.4.0", "pydantic>=2.7,<3",
 ]
 
+[project.optional-dependencies]
+research = ["medmnist==3.0.1", "scikit-learn==1.5.1", "scipy==1.13.1", "matplotlib==3.11.2"]
+demo = ["gradio==5.50.0"]
+
 [tool.setuptools]
-py-modules = ["biosignal", "gradcam", "main", "medical_volume", "memmap_stream", "model", "train"]
+py-modules = ["main", "schemas", "tracking", "model", "gradcam", "memmap_stream", "train", "evaluate", "sanity_checks",
+              "ablation", "reproduce_v1", "extract", "verifymodel", "bench", "app"]

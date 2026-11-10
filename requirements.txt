@@ -1,0 +1,9 @@
+# server / docker deps (cpu torch is installed separately in the Dockerfile)
+fastapi==0.111.1
+pydantic>=2.7,<3
+uvicorn==0.30.1
+websockets==13.0
+mediapipe==0.10.14
+opencv-contrib-python==4.11.0.86
+numpy==2.2.6
+pillow==10.4.0
