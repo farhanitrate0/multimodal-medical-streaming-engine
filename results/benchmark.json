@@ -1,0 +1,135 @@
+{
+  "ingest": {
+    "split": "train",
+    "in_memory_medmnist": {
+      "images": 4708,
+      "open_s": 6.36,
+      "peak_heap_mb": 226.5,
+      "images_per_s": 55485
+    },
+    "memmap": {
+      "images": 4708,
+      "open_s": 0.01,
+      "peak_heap_mb": 0.0,
+      "images_per_s": 42410
+    },
+    "hardware": {
+      "cpu": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+      "python": "3.11.9",
+      "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU"
+    }
+  },
+  "server": {
+    "url": "ws://127.0.0.1:8011/ws/stream",
+    "per_client_requests": 30,
+    "hardware": {
+      "cpu": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+      "python": "3.11.9",
+      "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU"
+    },
+    "modes": {
+      "medical": [
+        {
+          "clients": 1,
+          "requests": 30,
+          "throughput_rps": 6.3,
+          "p50_ms": 157.5,
+          "p95_ms": 183.9
+        },
+        {
+          "clients": 4,
+          "requests": 120,
+          "throughput_rps": 13.5,
+          "p50_ms": 258.6,
+          "p95_ms": 503.2
+        },
+        {
+          "clients": 8,
+          "requests": 240,
+          "throughput_rps": 18.2,
+          "p50_ms": 409.5,
+          "p95_ms": 596.8
+        },
+        {
+          "clients": 16,
+          "requests": 480,
+          "throughput_rps": 22.3,
+          "p50_ms": 679.9,
+          "p95_ms": 913.9
+        }
+      ],
+      "spatial": [
+        {
+          "clients": 1,
+          "requests": 30,
+          "throughput_rps": 7.7,
+          "p50_ms": 123.7,
+          "p95_ms": 173.1
+        },
+        {
+          "clients": 4,
+          "requests": 120,
+          "throughput_rps": 9.0,
+          "p50_ms": 424.3,
+          "p95_ms": 539.4
+        },
+        {
+          "clients": 8,
+          "requests": 240,
+          "throughput_rps": 10.0,
+          "p50_ms": 778.9,
+          "p95_ms": 962.1
+        },
+        {
+          "clients": 16,
+          "requests": 480,
+          "throughput_rps": 11.6,
+          "p50_ms": 1474.4,
+          "p95_ms": 1769.0
+        }
+      ]
+    }
+  },
+  "server_unbatched": {
+    "url": "ws://127.0.0.1:8011/ws/stream",
+    "per_client_requests": 30,
+    "hardware": {
+      "cpu": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+      "python": "3.11.9",
+      "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU"
+    },
+    "modes": {
+      "medical": [
+        {
+          "clients": 1,
+          "requests": 30,
+          "throughput_rps": 6.5,
+          "p50_ms": 153.9,
+          "p95_ms": 182.7
+        },
+        {
+          "clients": 4,
+          "requests": 120,
+          "throughput_rps": 11.1,
+          "p50_ms": 344.8,
+          "p95_ms": 475.7
+        },
+        {
+          "clients": 8,
+          "requests": 240,
+          "throughput_rps": 11.6,
+          "p50_ms": 665.9,
+          "p95_ms": 758.5
+        },
+        {
+          "clients": 16,
+          "requests": 480,
+          "throughput_rps": 11.6,
+          "p50_ms": 1371.5,
+          "p95_ms": 1492.6
+        }
+      ]
+    }
+  },
+  "notes": "Windows 11 laptop (i5-13450HX, RTX 4050 Laptop, Balanced power plan); server and client pinned to performance cores; batched and unbatched runs interleaved back to back. Absolute numbers vary with laptop power state; compare rows within a run."
+}
