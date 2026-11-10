@@ -1,0 +1,8 @@
+# hugging face space only (gradio comes from the sdk); zerogpu needs torch >= 2.8
+torch==2.8.0
+torchvision==0.23.0
+mediapipe==0.10.14
+opencv-contrib-python==4.11.0.86
+numpy==2.2.6
+pillow==10.4.0
+huggingface_hub
