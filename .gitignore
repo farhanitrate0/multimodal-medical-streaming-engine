@@ -1,23 +1,28 @@
-# Environments
+# environments
 venv/
 env/
+.env
+.env.*
 
-# Python Cache & Compiled Files
+# python cache
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
+*.py[cod]
 
-# Build & Package Metadata
+# build metadata
 *.egg-info/
-multimodal_medical_engine.egg-info/
 build/
 dist/
 
-# Large Model Weights
+# weights (hosted on Hugging Face) and ablation checkpoints
 *.pth
-fine_tuned_medical_resnet.pth
 
-# OS Generated Files
+# memmap dataset cache (rebuilt on first run)
+data/
+
+# local notes and scratch
+mdfile.md
+scratch/
+
+# os
 .DS_Store
 Thumbs.db
